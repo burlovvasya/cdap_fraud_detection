@@ -47,11 +47,11 @@ cdap_fraud_detection/
 
 ## Конфликт в файле
 
-![Конфликт в файле](conflict.png)
+![Конфликт в файле](conflict.PNG)
 
 ## Отмена коммита (задание по варианту)
 
-![Git log graph](commit_cancel.png)
+![Отмена коммита](commit_cancel.PNG)
 
 ## Используемые технологии
 
@@ -64,5 +64,5 @@ cdap_fraud_detection/
 
 ## Ссылки
 
-- **Репозиторий на GitHub:** [https://github.com/username/cdap_fraud_detection](https://github.com/burlovvasya/cdap_fraud_detection)  
+- **Репозиторий на GitHub:** [https://github.com/burlovvasya/cdap_fraud_detection](https://github.com/burlovvasya/cdap_fraud_detection)  
 
