@@ -24,12 +24,19 @@
 Проектная структура:
 
 cdap_fraud_detection/
+
 ├── data/ # Сырые данные
+
 ├── notebooks/ # Jupyter ноутбуки
+
 ├── src/ # Исходный код (ETL-скрипты)
+
 │ └── preprocessing.py
+
 ├── docs/
+
 ├── .gitignore # Игнорируемые файлы
+
 └── README.md # Этот файл
 
 ---
