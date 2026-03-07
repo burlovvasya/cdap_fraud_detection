@@ -1,0 +1,136 @@
+version: '3.8'
+
+networks:
+  backend-network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16
+
+volumes:
+  redis-data:
+    name: fraud-detection-redis-data
+    driver: local
+  # Для варианта №6 (tmpfs) - оставляем как комментарий
+  # tmpfs-data:
+
+services:
+  # Сервис базы данных Redis
+  redis:
+    image: redis:7.2-alpine
+    container_name: fraud-detection-redis
+    restart: always
+    command: >
+      redis-server 
+      --requirepass ${REDIS_PASSWORD:-redis123} 
+      --appendonly yes
+      --maxmemory 256mb
+      --maxmemory-policy allkeys-lru
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    networks:
+      - backend-network
+    healthcheck:
+      test: ["CMD", "redis-cli", "--raw", "incr", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    environment:
+      - REDIS_PASSWORD=${REDIS_PASSWORD:-redis123}
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  # Init-контейнер для загрузки данных (запускается один раз)
+  loader:
+    build:
+      context: ./loader
+      dockerfile: Dockerfile
+    container_name: fraud-detection-loader
+    depends_on:
+      redis:
+        condition: service_healthy
+    networks:
+      - backend-network
+    environment:
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - REDIS_PASSWORD=${REDIS_PASSWORD:-redis123}
+      - REDIS_DB=0
+      - DATA_PATH=/data/transactions.csv
+    volumes:
+      # Монтируем папку с данными из корня проекта (read-only)
+      - ../data:/data:ro
+    # Контейнер завершится после загрузки данных
+    restart: "no"
+
+  # Основное приложение Fraud Detection API
+  app:
+    build:
+      context: ./app
+      dockerfile: Dockerfile
+    container_name: fraud-detection-app
+    depends_on:
+      redis:
+        condition: service_healthy
+      loader:
+        condition: service_completed_successfully
+    networks:
+      - backend-network
+    ports:
+      - "8000:8000"
+    environment:
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - REDIS_PASSWORD=${REDIS_PASSWORD:-redis123}
+      - REDIS_DB=0
+      - APP_HOST=0.0.0.0
+      - APP_PORT=8000
+      - DEBUG=${DEBUG:-false}
+    # Техническое задание варианта №5: лимиты ресурсов
+    deploy:
+      resources:
+        limits:
+          cpus: '${APP_CPU_LIMIT:-0.5}'
+          memory: ${APP_MEM_LIMIT:-512M}
+        reservations:
+          cpus: '0.1'
+          memory: 256M
+    # Healthcheck для приложения
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    restart: unless-stopped
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  # (Опционально) Redis Commander - UI для администрирования Redis
+  redis-commander:
+    image: rediscommander/redis-commander:latest
+    container_name: fraud-detection-redis-commander
+    depends_on:
+      redis:
+        condition: service_healthy
+    networks:
+      - backend-network
+    ports:
+      - "8081:8081"
+    environment:
+      - REDIS_HOSTS=local:redis:6379:0:${REDIS_PASSWORD:-redis123}
+      - HTTP_USER=admin
+      - HTTP_PASSWORD=${REDIS_COMMANDER_PASSWORD:-admin123}
+    restart: unless-stopped
+    profiles:
+      - debug
+      - tools

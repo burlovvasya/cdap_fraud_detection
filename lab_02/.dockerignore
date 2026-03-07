@@ -1,0 +1,29 @@
+# Git
+.git
+.gitignore
+
+# Python
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache
+.coverage
+*.egg-info
+
+# Virtual Environment
+venv
+env
+.env
+.venv
+
+# IDE
+.vscode
+.idea
+
+# Data (данные будут монтироваться через volume)
+*.csv
+*.json
+*.xlsx
+*.parquet
+data/
