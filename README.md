@@ -124,16 +124,16 @@ cdap_fraud_detection/
 
 ### Инструкция по запуску
 
-#### Перейти в папку с Docker-конфигурацией
+#### Перейти в папку с Docker-конфигурацией:
 cd ~/cdap_fraud_detection/lab_02
 
-#### Настроить окружение
+#### Настроить окружение:
 cp .env.example .env
 
-#### Запустить сервисы
+#### Запустить сервисы:
 docker-compose up -d
 
-#### Проверить статус
+#### Проверить статус:
 docker-compose ps
 
 ---
@@ -142,25 +142,25 @@ docker-compose ps
 ![Статус контейнеров](docs/containers_status.PNG)
 *Все сервисы запущены: redis (healthy), loader (exit 0), app (up)*
 
+
 #### 2. Health check API
 ![Health check API](docs/health_chek_API.PNG)
 *API отвечает: status healthy, данные загружены (103 транзакции)*
+
 
 #### 3. Лимиты ресурсов (docker stats)
 ![Docker stats](docs/Docker_stats.PNG)
 *Видны лимиты памяти: 512MB limit, реальное использование 40.16MB*
 
+
 #### 4. Подтверждение лимитов (docker inspect)
 ![Resource limits](docs/resourses_limit.PNG)
 *CPU: 0.5 (500000000), Memory: 512MB (536870912)*
 
+
 #### 5. Логи успешной загрузки данных
 ![Логи загрузчика](docs/Logs_successful_data_upload.PNG)
-*Loader создал тестовые данные и загрузил 100 транзакций в Redis*
-
-#### 6. Документация API (Swagger UI)
-![Swagger UI](docs/swagger_ui.PNG)
-*Полная документация всех эндпоинтов API*
+*Loader создал тестовые данные и загрузил 100 транзакций в Redis
 
 ---
 
