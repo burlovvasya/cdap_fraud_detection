@@ -95,23 +95,35 @@ cdap_fraud_detection/
 
 cdap_fraud_detection/
 ├── lab_02/ # Docker-конфигурация
+
 │ ├── docker-compose.yml # Оркестрация сервисов
+
 │ ├── .env.example # Шаблон переменных окружения
+
 │ ├── .dockerignore # Исключения для Docker
+
 │ ├── loader/ # ETL-сервис загрузки данных
+
 │ │ ├── Dockerfile
+
 │ │ ├── requirements.txt
+
 │ │ └── loader.py
+
 │ └── app/ # Fraud Detection API
+
 │ ├── Dockerfile
+
 │ ├── requirements.txt
+
 │ └── app.py
+
 └── ... (остальные папки из ЛР1)
 
 
 
 ### Инструкция по запуску
-```bash
+
 # Перейти в папку с Docker-конфигурацией
 cd ~/cdap_fraud_detection/lab_02
 
