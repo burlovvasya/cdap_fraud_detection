@@ -143,13 +143,11 @@ docker-compose ps
 *Все сервисы запущены: redis (healthy), loader (exit 0), app (up)*
 
 <br>
-<br>
 
 #### 2. Health check API
 ![Health check API](docs/health_chek_API.PNG)
 *API отвечает: status healthy, данные загружены (103 транзакции)*
 
-<br>
 <br>
 
 #### 3. Лимиты ресурсов (docker stats)
@@ -157,13 +155,11 @@ docker-compose ps
 *Видны лимиты памяти: 512MB limit, реальное использование 40.16MB*
 
 <br>
-<br>
 
 #### 4. Подтверждение лимитов (docker inspect)
 ![Resource limits](docs/resourses_limit.PNG)
 *CPU: 0.5 (500000000), Memory: 512MB (536870912)*
 
-<br>
 <br>
 
 #### 5. Логи успешной загрузки данных
