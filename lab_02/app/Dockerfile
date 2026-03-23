@@ -3,7 +3,7 @@ FROM python:3.10-slim AS builder
 
 # Устанавливаем build dependencies
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    gcc \
+    gcc=4:12.2.0-3  \
     && rm -rf /var/lib/apt/lists/*
 
 # Создаем пользователя
