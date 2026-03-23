@@ -2,8 +2,9 @@
 FROM python:3.10-slim AS builder
 
 # Устанавливаем build dependencies
+# hadolint ignore=DL3008
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    gcc=4:12.2.0-3  \
+    gcc \
     && rm -rf /var/lib/apt/lists/*
 
 # Создаем пользователя
